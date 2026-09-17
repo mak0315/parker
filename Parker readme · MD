@@ -1,0 +1,403 @@
+# 🏠 Parker - Real Estate Lead Generation Bot
+
+A free, open-source lead aggregation bot for Islamabad real estate market. Automatically scrapes and organizes leads from all major platforms.
+
+**Features:**
+- ✅ Multi-platform scraping (Facebook, Twitter, Reddit, Google)
+- ✅ Real-time lead collection & notifications
+- ✅ Web dashboard for lead management
+- ✅ Lead scoring & filtering
+- ✅ Free hosting & deployment
+- ✅ Completely open-source
+
+---
+
+## 📋 Table of Contents
+1. [Tech Stack](#tech-stack)
+2. [Local Setup](#local-setup)
+3. [Configuration](#configuration)
+4. [Deployment](#deployment)
+5. [Usage](#usage)
+6. [Best Practices](#best-practices)
+7. [Troubleshooting](#troubleshooting)
+
+---
+
+## 🛠 Tech Stack
+
+| Component | Technology | Cost |
+|-----------|-----------|------|
+| Backend | Node.js + Express | Free |
+| Database | MongoDB Atlas (Free Tier) | Free |
+| Scraping | Python + Selenium/BeautifulSoup | Free |
+| Frontend | React + Vite | Free |
+| Hosting | Render.com or Railway | Free |
+| Task Scheduling | Node-cron | Free |
+
+---
+
+## 🚀 Local Setup
+
+### Prerequisites
+- Node.js v18+ ([Download](https://nodejs.org))
+- Python 3.9+ ([Download](https://python.org))
+- Git
+- MongoDB Atlas account (free) - [Create here](https://www.mongodb.com/cloud/atlas)
+
+### Step 1: Clone & Install
+
+```bash
+# Clone the repository
+git clone https://github.com/yourusername/parker.git
+cd parker
+
+# Install backend dependencies
+npm install
+
+# Install Python dependencies
+pip install -r requirements.txt
+```
+
+### Step 2: Environment Setup
+
+Create a `.env` file in the root directory:
+
+```env
+# MongoDB
+MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/parker?retryWrites=true&w=majority
+
+# API Keys (get these from respective platforms)
+TWITTER_BEARER_TOKEN=your_twitter_bearer_token
+FACEBOOK_ACCESS_TOKEN=your_facebook_access_token
+
+# App Settings
+NODE_ENV=development
+PORT=5000
+FRONTEND_URL=http://localhost:3000
+SCRAPING_INTERVAL=3600  # 1 hour in seconds
+LOG_LEVEL=info
+
+# Email Notifications (Optional - Gmail)
+SMTP_EMAIL=your_email@gmail.com
+SMTP_PASSWORD=your_app_password
+
+# Redis for background jobs (Optional for free tier - skip if not needed)
+REDIS_URL=redis://localhost:6379
+```
+
+### Step 3: Start the Application
+
+```bash
+# Terminal 1 - Backend
+npm run dev
+
+# Terminal 2 - Frontend
+cd client
+npm install
+npm run dev
+
+# Terminal 3 - Python Scraper (when ready)
+python scripts/facebook_scraper.py
+```
+
+Backend will run on `http://localhost:5000`
+Frontend will run on `http://localhost:3000`
+
+---
+
+## ⚙️ Configuration
+
+### Get Free API Keys
+
+#### Twitter/X (Recommended - Easiest)
+1. Go to [developer.twitter.com](https://developer.twitter.com)
+2. Create a project and app
+3. Get Bearer Token from "Keys and tokens" tab
+4. Add to `.env` as `TWITTER_BEARER_TOKEN`
+
+#### Facebook Graph API
+1. Go to [developers.facebook.com](https://developers.facebook.com)
+2. Create an app (type: Consumer)
+3. Add Facebook Login product
+4. Get access token from Tools → Access Token Debugger
+5. Add to `.env` as `FACEBOOK_ACCESS_TOKEN`
+
+#### MongoDB Atlas (Free Database)
+1. Create account at [mongodb.com/cloud/atlas](https://www.mongodb.com/cloud/atlas)
+2. Create a free cluster
+3. Get connection string
+4. Add to `.env` as `MONGODB_URI`
+
+#### Keywords Configuration
+
+Edit `config/keywords.js`:
+
+```javascript
+module.exports = {
+  locations: ['Islamabad', 'Rawalpindi', 'F-7', 'F-8', 'F-9', 'F-10', 'G-6', 'G-7'],
+  propertyTypes: ['apartment', 'house', 'flat', 'studio', 'room'],
+  keywords: [
+    'rent', 'short term rental', 'furnished', 'unfurnished',
+    'booking', 'available', 'urgent', 'per night'
+  ],
+  exclude: ['scam', 'fraud', 'spam']
+};
+```
+
+---
+
+## 📤 Deployment (Free)
+
+### Option A: Render.com (Recommended)
+
+1. **Push to GitHub**
+   ```bash
+   git init
+   git add .
+   git commit -m "Initial Parker setup"
+   git push -u origin main
+   ```
+
+2. **Deploy Backend**
+   - Go to [render.com](https://render.com)
+   - Click "New +" → "Web Service"
+   - Connect your GitHub repo
+   - Settings:
+     - Name: `parker-api`
+     - Runtime: Node
+     - Build: `npm install`
+     - Start: `npm run start`
+   - Add Environment Variables from `.env`
+   - Click Deploy
+
+3. **Deploy Frontend**
+   - Create another web service
+   - Settings:
+     - Name: `parker-dashboard`
+     - Runtime: Node
+     - Build: `cd client && npm install && npm run build`
+     - Start: `npm run preview`
+   - Deploy
+
+### Option B: Railway.app
+
+1. Connect GitHub repo
+2. Railway automatically detects Node.js
+3. Set environment variables in Railway dashboard
+4. Auto-deploys on push
+
+### Option C: Vercel + Heroku (Free Tier Ending)
+
+Alternative if Render/Railway don't work for you.
+
+---
+
+## 💻 Usage
+
+### Dashboard Features
+
+**1. View All Leads**
+- Filter by date, platform, location, property type
+- Search by keywords
+- Sort by relevance/recency
+
+**2. Lead Details**
+- Full post content
+- User profile link
+- Engagement metrics (likes, comments)
+- Direct link to original post
+- Contact information (if available)
+
+**3. Lead Scoring**
+- Automatic scoring based on:
+  - Keyword relevance
+  - Engagement level
+  - Account age & credibility
+  - Message urgency
+
+**4. Manage Leads**
+- Mark as contacted
+- Add notes
+- Set follow-up reminders
+- Export to CSV
+
+### API Endpoints
+
+```bash
+# Get all leads
+GET /api/leads?page=1&limit=20
+
+# Get leads by platform
+GET /api/leads?platform=twitter
+
+# Get leads by date
+GET /api/leads?startDate=2024-01-01&endDate=2024-01-07
+
+# Get single lead
+GET /api/leads/:id
+
+# Create lead (manual)
+POST /api/leads
+{
+  "title": "...",
+  "content": "...",
+  "platform": "facebook",
+  "link": "...",
+  "score": 85
+}
+
+# Update lead status
+PATCH /api/leads/:id
+{ "status": "contacted" }
+
+# Get statistics
+GET /api/stats
+```
+
+---
+
+## ✅ Best Practices Implemented
+
+### 1. **Rate Limiting**
+- Respects API rate limits
+- Implements exponential backoff
+- Logs rate limit errors
+
+### 2. **Data Privacy**
+- No personal data stored unnecessarily
+- Only public posts scraped
+- GDPR/Privacy compliant
+- Clear Terms of Service
+
+### 3. **Error Handling**
+- Comprehensive error logging
+- Graceful fallbacks
+- Retry mechanisms
+- Dead letter queues for failed scrapes
+
+### 4. **Database**
+- Indexed queries for performance
+- Duplicate prevention
+- Automatic cleanup of old data (30+ days)
+- Backup strategy
+
+### 5. **Code Quality**
+- ESLint + Prettier configured
+- Environment variables for security
+- Input validation & sanitization
+- No hardcoded credentials
+
+### 6. **Monitoring**
+- Scrape success/failure rates
+- Lead quality metrics
+- API response times
+- System health checks
+
+---
+
+## 📊 Monitoring & Logs
+
+### View Logs
+
+```bash
+# Development
+npm run dev
+
+# Production (Render)
+- Go to your Render dashboard
+- Click service → Logs tab
+- View real-time logs
+
+# Save logs locally
+npm run logs > parker.log
+```
+
+### Health Check
+
+```bash
+curl http://localhost:5000/health
+```
+
+Response:
+```json
+{
+  "status": "healthy",
+  "uptime": 3600,
+  "leads_count": 156,
+  "last_scrape": "2024-01-20T10:30:00Z"
+}
+```
+
+---
+
+## 🔧 Troubleshooting
+
+### Issue: Database Connection Error
+
+```
+Error: connect ECONNREFUSED 127.0.0.1:27017
+```
+
+**Solution:**
+- Check MongoDB URI in `.env`
+- Verify IP whitelist in MongoDB Atlas (should be 0.0.0.0/0 for free tier)
+- Test connection: `mongosh "mongodb+srv://..."`
+
+### Issue: API Rate Limit
+
+```
+Error: Rate limit exceeded
+```
+
+**Solution:**
+- Increase `SCRAPING_INTERVAL` in `.env`
+- Use free tier API limits
+- Twitter: 15 requests/15min
+- Facebook: 200 requests/hour
+
+### Issue: No Leads Collected
+
+**Solution:**
+1. Check if keywords are too specific
+2. Verify API keys are valid: `npm run test-apis`
+3. Check logs: `npm run logs | grep ERROR`
+4. Manually test scraper:
+   ```bash
+   python scripts/test_scraper.py
+   ```
+
+### Issue: Frontend Won't Connect to Backend
+
+**Solution:**
+- Check `FRONTEND_URL` in backend `.env`
+- Verify CORS headers in `config/cors.js`
+- Test API: `curl http://localhost:5000/api/health`
+
+---
+
+## 📈 Next Steps
+
+After setup:
+
+1. **Monitor leads** - Check dashboard daily
+2. **Adjust keywords** - Refine based on quality
+3. **Add more sources** - Instagram, LinkedIn later
+4. **Set up notifications** - Email alerts for high-score leads
+5. **Integrate CRM** - Connect to your existing CRM
+
+---
+
+## 📞 Support
+
+- Check logs first
+- Review this README
+- Check GitHub issues
+- Email: support@parker.local
+
+---
+
+## 📄 License
+
+MIT - Free to use and modify
+
+**Made for Pakistani real estate hustlers 🚀**

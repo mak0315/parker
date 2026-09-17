@@ -1,0 +1,48 @@
+{
+  "name": "parker-backend",
+  "version": "1.0.0",
+  "description": "Real estate lead generation bot for Islamabad",
+  "main": "src/index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js",
+    "test-apis": "node scripts/test-apis.js",
+    "logs": "node scripts/tail.js",
+    "scrape-now": "node scripts/manual-scrape.js",
+    "clean-old-leads": "node scripts/cleanup.js",
+    "lint": "eslint src/",
+    "format": "prettier --write src/"
+  },
+  "keywords": [
+    "real-estate",
+    "leads",
+    "islamabad",
+    "web-scraping"
+  ],
+  "author": "Parker",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "mongoose": "^8.0.0",
+    "dotenv": "^16.3.1",
+    "axios": "^1.6.2",
+    "node-cron": "^3.0.2",
+    "cors": "^2.8.5",
+    "morgan": "^1.10.0",
+    "helmet": "^7.1.0",
+    "express-validator": "^7.0.0",
+    "winston": "^3.11.0",
+    "rate-limiter-flexible": "^2.4.1",
+    "cheerio": "^1.0.0-rc.12",
+    "twitter-api-v2": "^1.15.2",
+    "express-rate-limit": "^7.1.5",
+    "joi": "^17.11.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2",
+    "eslint": "^8.55.0",
+    "prettier": "^3.1.1",
+    "supertest": "^6.3.3"
+  }
+}
